@@ -46,26 +46,26 @@ stages:
     #     tags: |
     #       $(imageTag)
 
-    - task: Docker@2
-      displayName: 'Build & Push Docker Image'
-      inputs:
-        containerRegistry: 'acr-svc-msi-1'
-        repository: '$(imageRepository)'
-        command: 'buildAndPush'
-        Dockerfile: '$(dockerfilePath)'
-        buildContext: '$(buildContext)'
-        tags: '$(imageTag)'
-
-    # - task: AzureCLI@3
-    # displayName: 'Build & push Docker Image - Scipt'
+    # - task: Docker@2
+    #   displayName: 'Build & Push Docker Image'
     #   inputs:
-    #     connectionType: 'azureRM'
-    #     azureSubscription: 'SVC-AZ-ARM-250926'
-    #     scriptType: 'bash'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       az acr login --name $(acrName)
+    #     containerRegistry: 'acr-svc-msi-1'
+    #     repository: '$(imageRepository)'
+    #     command: 'buildAndPush'
+    #     Dockerfile: '$(dockerfilePath)'
+    #     buildContext: '$(buildContext)'
+    #     tags: '$(imageTag)'
+
+    - task: AzureCLI@3
+      displayName: 'Build & push Docker Image - Scipt'
+      inputs:
+        connectionType: 'azureRM'
+        azureSubscription: 'SVC-AZ-ARM-250926'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login --name $(acrName)
           
-    #       docker tag $(imageRepository):$(imageTag) $(acrLoginServer)/$(imageRepository):$(imageTag)
+          docker tag $(imageRepository):$(imageTag) $(acrLoginServer)/$(imageRepository):$(imageTag)
           
-    #       docker push $(acrLoginServer)/$(imageRepository):$(imageTag)
+          docker push $(acrLoginServer)/$(imageRepository):$(imageTag)

@@ -3,10 +3,10 @@ trigger:
     include:
       - main
 
-pr:
-  branches:
-    include:
-      - main
+# pr:
+#   branches:
+#     include:
+#       - main
 
 pool: selfhost-aks
 
@@ -35,6 +35,7 @@ stages:
 
     - checkout: self
       displayName: 'Checkout Source Code'
+
     - task: Docker@2
       displayName: 'Build Docker Image'
       inputs:
@@ -42,46 +43,27 @@ stages:
         command: 'build'
         Dockerfile: '$(dockerfilePath)'
         buildContext: '$(buildContext)'
+        tags: |
+          $(imageTag)
 
-    # - task: AzureCLI@2
-    #   displayName: 'Push Image to ACR'
-    #   inputs:
-    #     azureSubscription: 'YOUR-AZURE-SERVICE-CONNECTION'
-    #     scriptType: bash
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'acr-svc-msi-1'
+        repository: '$(imageRepository)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dockerfilePath)'
+        buildContext: '$(buildContext)'
+        tags: '$(imageTag)'
 
-    #       echo "Azure account:"
-    #       az account show
-
-    #       echo "Logging in to ACR..."
-
-    #       az acr login \
-    #         --name $(acrName)
-
-    #       echo "Tagging image..."
-
-    #       docker tag \
-    #         $(imageRepository):$(imageTag) \
-    #         $(acrLoginServer)/$(imageRepository):$(imageTag)
-
-    #       docker tag \
-    #         $(imageRepository):latest \
-    #         $(acrLoginServer)/$(imageRepository):latest
-
-    #       echo "Pushing versioned image..."
-
-    #       docker push \
-    #         $(acrLoginServer)/$(imageRepository):$(imageTag)
-
-    #       echo "Pushing latest image..."
-
-    #       docker push \
-    #         $(acrLoginServer)/$(imageRepository):latest
-
-    #       echo ""
-    #       echo "=========================================="
-    #       echo "Image pushed successfully"
-    #       echo "=========================================="
-    #       echo "$(acrLoginServer)/$(imageRepository):$(imageTag)"
-    #       echo "$(acrLoginServer)/$(imageRepository):latest"
+    - task: AzureCLI@3
+      inputs:
+        connectionType: 'azureRM'
+        azureSubscription: 'SVC-AZ-ARM-250926'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login --name $(acrName)
+          
+          docker tag $(imageRepository):$(imageTag) $(acrLoginServer)/$(imageRepository):$(imageTag)
+          
+          docker push $(acrLoginServer)/$(imageRepository):$(imageTag)

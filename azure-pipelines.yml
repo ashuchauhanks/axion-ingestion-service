@@ -134,6 +134,7 @@ stages:
         namespace: 'axion'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(Build.SourcesDirectory)/manifest/*.yml'
+        configuration: '$(Build.SourcesDirectory)/manifest/deployment.yml'
         workingDirectory: '$(Build.SourcesDirectory)/manifest'
 
+    

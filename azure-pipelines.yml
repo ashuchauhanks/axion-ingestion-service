@@ -116,6 +116,13 @@ stages:
     #       kubectl get deployment $(deploymentName) -n "$(kubernetesNamespace)"
 
 
+    - script: |
+        pwd
+        ls -la
+        ls -la manifest
+        displayName: 'Check Manifest Files'
+
+
 
     - task: Kubernetes@1
       displayName: 'Apply Kubernetes Manifests'

@@ -11,9 +11,13 @@ pr:
 pool: selfhost-aks
 
 variables:
-  pythonVersion: '3.12'
+
   acrName: 'acrashudevka'
   acrLoginServer: 'acrashudevka.azurecr.io'
+
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  buildContext: '$(Build.SourcesDirectory)'
+
   imageRepository: 'axion-ingestion-service'
   imageTag: '$(Build.BuildId)'
 
@@ -36,9 +40,8 @@ stages:
       inputs:
         repository: '$(imageRepository)'
         command: 'build'
-        Dockerfile: '$(Build.SourcesDirectory)/axion-ingestion-service/Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)/axion-ingestion-service'
-        tags: '$(Build.BuildId)'
+        Dockerfile: '$(dockerfilePath)'
+        buildContext: '$(buildContext)'
 
     # - task: AzureCLI@2
     #   displayName: 'Push Image to ACR'

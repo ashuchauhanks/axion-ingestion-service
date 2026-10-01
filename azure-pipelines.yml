@@ -1,0 +1,85 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  pythonVersion: '3.12'
+  acrName: 'acrashudevka'
+  acrLoginServer: 'acrashudevka.azurecr.io'
+  imageRepository: 'axion-ingestion-service'
+  imageTag: '$(Build.BuildId)'
+
+stages:
+
+- stage: BuildAndPush
+  displayName: 'Build and Push Ingestion Service'
+
+  jobs:
+
+  - job: BuildAndPush
+    displayName: 'Build Docker Image and Push to ACR'
+
+    steps:
+
+    - checkout: self
+      displayName: 'Checkout Source Code'
+    - task: Docker@2
+      displayName: 'Build Docker Image'
+      inputs:
+        repository: '$(imageRepository)'
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/axion-ingestion-service/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/axion-ingestion-service'
+        tags: '$(Build.BuildId)'
+
+    # - task: AzureCLI@2
+    #   displayName: 'Push Image to ACR'
+    #   inputs:
+    #     azureSubscription: 'YOUR-AZURE-SERVICE-CONNECTION'
+    #     scriptType: bash
+    #     scriptLocation: inlineScript
+    #     inlineScript: |
+
+    #       echo "Azure account:"
+    #       az account show
+
+    #       echo "Logging in to ACR..."
+
+    #       az acr login \
+    #         --name $(acrName)
+
+    #       echo "Tagging image..."
+
+    #       docker tag \
+    #         $(imageRepository):$(imageTag) \
+    #         $(acrLoginServer)/$(imageRepository):$(imageTag)
+
+    #       docker tag \
+    #         $(imageRepository):latest \
+    #         $(acrLoginServer)/$(imageRepository):latest
+
+    #       echo "Pushing versioned image..."
+
+    #       docker push \
+    #         $(acrLoginServer)/$(imageRepository):$(imageTag)
+
+    #       echo "Pushing latest image..."
+
+    #       docker push \
+    #         $(acrLoginServer)/$(imageRepository):latest
+
+    #       echo ""
+    #       echo "=========================================="
+    #       echo "Image pushed successfully"
+    #       echo "=========================================="
+    #       echo "$(acrLoginServer)/$(imageRepository):$(imageTag)"
+    #       echo "$(acrLoginServer)/$(imageRepository):latest"

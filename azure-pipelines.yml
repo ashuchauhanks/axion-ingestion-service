@@ -137,4 +137,12 @@ stages:
         configuration: '$(Build.SourcesDirectory)/manifest/deployment.yml'
         workingDirectory: '$(Build.SourcesDirectory)/manifest'
 
-    
+    - task: KubernetesManifest@1
+      inputs:
+        action: 'deploy'
+        connectionType: 'kubernetesServiceConnection'
+        kubernetesServiceConnection: 'AzureKubernetesServiceConnection-aks-dev'
+        namespace: 'axion'
+        strategy: 'canary'
+        percentage: '30'
+        manifests: '''manifest/deployment.yml'',''manifest/service.yml'''

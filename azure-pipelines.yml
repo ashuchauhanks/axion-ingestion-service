@@ -36,17 +36,18 @@ stages:
     - checkout: self
       displayName: 'Checkout Source Code'
 
-    - task: Docker@2
-      displayName: 'Build Docker Image'
-      inputs:
-        repository: '$(imageRepository)'
-        command: 'build'
-        Dockerfile: '$(dockerfilePath)'
-        buildContext: '$(buildContext)'
-        tags: |
-          $(imageTag)
+    # - task: Docker@2
+    #   displayName: 'Build Docker Image'
+    #   inputs:
+    #     repository: '$(imageRepository)'
+    #     command: 'build'
+    #     Dockerfile: '$(dockerfilePath)'
+    #     buildContext: '$(buildContext)'
+    #     tags: |
+    #       $(imageTag)
 
     - task: Docker@2
+      displayName: 'Build & Push Docker Image'
       inputs:
         containerRegistry: 'acr-svc-msi-1'
         repository: '$(imageRepository)'
@@ -56,6 +57,7 @@ stages:
         tags: '$(imageTag)'
 
     # - task: AzureCLI@3
+    # displayName: 'Build & push Docker Image - Scipt'
     #   inputs:
     #     connectionType: 'azureRM'
     #     azureSubscription: 'SVC-AZ-ARM-250926'

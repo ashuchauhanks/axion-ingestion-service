@@ -118,21 +118,6 @@ stages:
 
 
     - task: Kubernetes@1
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: 'SVC-AZ-ARM-250926'
-        azureResourceGroup: 'rg-aks-dev'
-        kubernetesCluster: 'aks-dev'
-        namespace: 'axion'
-        command: 'apply'
-        secretType: 'generic'
-        forceUpdate: false
-        versionOrLocation: 'location'
-        specifyLocation: '/usr/local/bin/kubectl'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/manifest/deployment.yml'
-
-
-    - task: Kubernetes@1
       displayName: 'Apply Kubernetes Manifests'
       inputs:
         connectionType: 'Azure Resource Manager'
@@ -142,4 +127,6 @@ stages:
         namespace: 'axion'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(Build.SourcesDirectory)/manifest/service.yaml'
+        configuration: '$(Build.SourcesDirectory)/manifest/*.yaml'
+        workingDirectory: '$(Build.SourcesDirectory)/manifest'
+

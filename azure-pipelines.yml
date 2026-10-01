@@ -97,21 +97,20 @@ stages:
       displayName: 'Deploy to AKS'
       inputs:
         azureSubscription: 'SVC-AZ-ARM-250926'
-        scriptType: 'ps'
+        scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+
           az aks get-credentials --resource-group "$(aksResourceGroup)" --name "$(aksClusterName)" --overwrite-existing
-          
+
           kubectl apply -f "$(Build.SourcesDirectory)/manifest/deployment.yaml" -f "$(Build.SourcesDirectory)/manifest/service.yaml" -n "$(kubernetesNamespace)"
-          
+
           kubectl set image deployment/$(deploymentName) $(containerName)=$(acrLoginServer)/$(imageRepository):$(imageTag) -n "$(kubernetesNamespace)"
-          
+
           kubectl rollout status deployment/$(deploymentName) -n "$(kubernetesNamespace)" --timeout=5m
-          
+
           kubectl get pods -n "$(kubernetesNamespace)"
-          
+
           kubectl get svc -n "$(kubernetesNamespace)"
-          
+
           kubectl get deployment $(deploymentName) -n "$(kubernetesNamespace)"
-
-

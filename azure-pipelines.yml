@@ -55,15 +55,15 @@ stages:
         buildContext: '$(buildContext)'
         tags: '$(imageTag)'
 
-    - task: AzureCLI@3
-      inputs:
-        connectionType: 'azureRM'
-        azureSubscription: 'SVC-AZ-ARM-250926'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          az acr login --name $(acrName)
+    # - task: AzureCLI@3
+    #   inputs:
+    #     connectionType: 'azureRM'
+    #     azureSubscription: 'SVC-AZ-ARM-250926'
+    #     scriptType: 'bash'
+    #     scriptLocation: 'inlineScript'
+    #     inlineScript: |
+    #       az acr login --name $(acrName)
           
-          docker tag $(imageRepository):$(imageTag) $(acrLoginServer)/$(imageRepository):$(imageTag)
+    #       docker tag $(imageRepository):$(imageTag) $(acrLoginServer)/$(imageRepository):$(imageTag)
           
-          docker push $(acrLoginServer)/$(imageRepository):$(imageTag)
+    #       docker push $(acrLoginServer)/$(imageRepository):$(imageTag)

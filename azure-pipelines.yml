@@ -120,7 +120,7 @@ stages:
         pwd
         ls -la
         ls -la manifest
-        displayName: 'Check Manifest Files'
+      displayName: 'Check Manifest Files'
 
 
 

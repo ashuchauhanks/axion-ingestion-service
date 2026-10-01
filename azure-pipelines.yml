@@ -134,7 +134,9 @@ stages:
         namespace: 'axion'
         command: 'apply'
         useConfigurationFile: true
-        configuration: '$(Build.SourcesDirectory)/manifest/deployment.yml'
+        configuration: |
+          $(Build.SourcesDirectory)/manifest/deployment.yml
+          $(Build.SourcesDirectory)/manifest/service.yml
         workingDirectory: '$(Build.SourcesDirectory)/manifest'
 
     - task: KubernetesManifest@1
@@ -145,4 +147,6 @@ stages:
         namespace: 'axion'
         strategy: 'canary'
         percentage: '30'
-        manifests: '''manifest/deployment.yml'',''manifest/service.yml'''
+        manifests: |
+          manifest/deployment.yml
+          manifest/service.yml

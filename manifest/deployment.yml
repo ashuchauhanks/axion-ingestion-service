@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: axion-ingestion-service
-        image: acrashudevka.azurecr.io/axion-ingestion-service:342
+        image: acrashudevka.azurecr.io/axion-ingestion-service:$(Build.BuildId)
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

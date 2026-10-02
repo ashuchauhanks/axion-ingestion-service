@@ -124,20 +124,20 @@ stages:
 
 
 
-    - task: Kubernetes@1
-      displayName: 'Apply Kubernetes Manifests'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: 'SVC-AZ-ARM-250926'
-        azureResourceGroup: 'rg-aks-dev'
-        kubernetesCluster: 'aks-dev'
-        namespace: 'axion'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: |
-          $(Build.SourcesDirectory)/manifest/deployment.yml
-  #  $(Build.SourcesDirectory)/manifest/service.yml
-        workingDirectory: '$(Build.SourcesDirectory)/manifest'
+  #   - task: Kubernetes@1
+  #     displayName: 'Apply Kubernetes Manifests'
+  #     inputs:
+  #       connectionType: 'Azure Resource Manager'
+  #       azureSubscriptionEndpoint: 'SVC-AZ-ARM-250926'
+  #       azureResourceGroup: 'rg-aks-dev'
+  #       kubernetesCluster: 'aks-dev'
+  #       namespace: 'axion'
+  #       command: 'apply'
+  #       useConfigurationFile: true
+  #       configuration: |
+  #         $(Build.SourcesDirectory)/manifest/deployment.yml
+  # #  $(Build.SourcesDirectory)/manifest/service.yml
+  #       workingDirectory: '$(Build.SourcesDirectory)/manifest'
         
 
   # same purpose with task: KubernetesManifest@1
@@ -148,8 +148,6 @@ stages:
         connectionType: 'kubernetesServiceConnection'
         kubernetesServiceConnection: 'AzureKubernetesServiceConnection-aks-dev'
         namespace: 'axion'
-        strategy: 'canary'
-        percentage: '30'
         manifests: |
           manifest/deployment.yml
           manifest/service.yml

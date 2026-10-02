@@ -151,3 +151,4 @@ stages:
         manifests: |
           manifest/deployment.yml
           manifest/service.yml
+        containers: 'acrashudevka.azurecr.io/axion-ingestion-service:$(Build.BuildId)'
